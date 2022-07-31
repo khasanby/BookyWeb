@@ -57,7 +57,7 @@ namespace BookyWeb.Data.Repositories.CategoryRepository
         {
             var response = new ServiceResponse<GetCategoryDto>();
             _dbContext.Categories.Update(category);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             response.Data = _mapper.Map<GetCategoryDto>(category);
             return response;
         }

@@ -50,8 +50,8 @@ namespace BookyWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var categoryDto = await _categoryRepository.GetSingleCategory(id);
-            var category = _mapper.Map<Category>(categoryDto.Data);
+            var categoryResponse = await _categoryRepository.GetSingleCategory(id);
+            var category = _mapper.Map<Category>(categoryResponse.Data);
             if (category == null)
             {
                 return NotFound();
@@ -78,8 +78,8 @@ namespace BookyWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var categoryDto = await _categoryRepository.GetSingleCategory(id);
-            var category = _mapper.Map<Category>(categoryDto.Data);
+            var categoryResponse = await _categoryRepository.GetSingleCategory(id);
+            var category = _mapper.Map<Category>(categoryResponse.Data);
             if (category == null)
             {
                 return NotFound();
@@ -96,7 +96,7 @@ namespace BookyWeb.Areas.Admin.Controllers
                 return NotFound();
             }
             var category = await _categoryRepository.GetSingleCategory(id);
-            if (category == null)
+            if (category.Data == null)
             {
                 return NotFound();
             }

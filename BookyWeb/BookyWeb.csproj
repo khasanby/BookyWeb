@@ -28,8 +28,4 @@
     <ProjectReference Include="..\BookyWeb.Data\BookyWeb.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -1,6 +1,7 @@
 using BookyWeb.Data.Data;
 using BookyWeb.Data.Repositories.CategoryRepository;
 using BookyWeb.Data.Repositories.CoverTypeRepository;
+using BookyWeb.Data.Repositories.ProductRepository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICoverTypeRepository, CoverTypeRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();

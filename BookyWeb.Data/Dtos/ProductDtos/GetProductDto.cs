@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using BookyWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookyWeb.Models
+namespace BookyWeb.Data.Dtos.ProductDtos
 {
-    public class Product
+    public class GetProductDto
     {
         [Key]
         public int Id { get; set; }
@@ -21,20 +21,19 @@ namespace BookyWeb.Models
         [Required]
         public string Authors { get; set; } = string.Empty;
         [Required]
-        [Range(1,100000)]
+        [Range(1, 100000)]
         public double Price { get; set; }
-        [Range(1,100000)]
         [Required]
+        [Range(1, 100000)]
         public double PriceDiscount { get; set; }
-        [ValidateNever]
         public string ImageUrl { get; set; } = string.Empty;
         [Required]
         public int CategoryId { get; set; }
-        [ValidateNever]
+        [ForeignKey("CategoryId")]
         public Category Category { get; set; }
         [Required]
         public int CoverTypeId { get; set; }
-        [ValidateNever]
+        [ForeignKey("CoverTypeId")]
         public CoverType CoverType { get; set; }
     }
 }

@@ -50,8 +50,8 @@ namespace BookyWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var coverTypeDto = await _coverTypeRepository.GetSingleCoverType(id);
-            var coverType = _mapper.Map<CoverType>(coverTypeDto.Data);
+            var coverTypeResponse = await _coverTypeRepository.GetSingleCoverType(id);
+            var coverType = _mapper.Map<CoverType>(coverTypeResponse.Data);
             if (coverType == null)
             {
                 return NotFound();
@@ -78,8 +78,8 @@ namespace BookyWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var coverTypeDto = await _coverTypeRepository.GetSingleCoverType(id);
-            var coverType = _mapper.Map<CoverType>(coverTypeDto.Data);
+            var coverTypeResponse = await _coverTypeRepository.GetSingleCoverType(id);
+            var coverType = _mapper.Map<CoverType>(coverTypeResponse.Data);
             if (coverType == null)
             {
                 return NotFound();
@@ -96,7 +96,7 @@ namespace BookyWeb.Areas.Admin.Controllers
                 return NotFound();
             }
             var coverType = await _coverTypeRepository.GetSingleCoverType(id);
-            if (coverType == null)
+            if (coverType.Data == null)
             {
                 return NotFound();
             }
