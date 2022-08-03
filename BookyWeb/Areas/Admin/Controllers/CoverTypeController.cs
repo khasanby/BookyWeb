@@ -46,16 +46,16 @@ namespace BookyWeb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if(id == null || id == 0)
             {
                 return NotFound();
             }
-            var coverTypeResponse = await _coverTypeRepository.GetSingleCoverType(id);
-            var coverType = _mapper.Map<CoverType>(coverTypeResponse.Data);
-            if (coverType == null)
+            var coverResponse = await _coverTypeRepository.GetSingleCoverType(id);
+            if(coverResponse.Data == null)
             {
                 return NotFound();
             }
+            CoverType coverType = _mapper.Map<CoverType>(coverResponse.Data);
             return View(coverType);
         }
 

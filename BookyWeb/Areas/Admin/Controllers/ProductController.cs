@@ -30,15 +30,13 @@ namespace BookyWeb.Areas.Admin.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ServiceResponse<List<GetProductDto>> response = await _productReposiotry.GetAllProducts();
-            List<Product> Products = response.Data.Select(c => _mapper.Map<Product>(c)).ToList();
-            return View(Products);
+            return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create(int? id)
+        public async Task<IActionResult> Upsert(int? id)
         {
             ServiceResponse<List<GetCategoryDto>> categoryResponse = await _categoryRepository.GetAllCategories();
             ServiceResponse<List<GetCoverTypeDto>> covertypeResponse = await _coverTypeRepository.GetAllCoverTypes();
@@ -66,7 +64,7 @@ namespace BookyWeb.Areas.Admin.Controllers
             }
             else
             {
-                ServiceResponse<GetProductDto> productResponse = await _productReposiotry.GetSingleProduct(productVM.Product.Id);
+                ServiceResponse<GetProductDto> productResponse = await _productReposiotry.GetSingleProduct(id);
                 productVM.Product = _mapper.Map<Product>(productResponse.Data);
                 return View(productVM);
             }
@@ -74,7 +72,7 @@ namespace BookyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductVM productVM, IFormFile? file)
+        public async Task<IActionResult> Upsert(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
@@ -85,11 +83,20 @@ namespace BookyWeb.Areas.Admin.Controllers
                     var uploads = Path.Combine(wwwRootPath, @"images\products");
                     var extension = Path.GetExtension(file.FileName);
 
+                    if (productVM.Product.ImageUrl != null)
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     using (var fileStreams = new FileStream(Path.Combine(uploads, filename + extension), FileMode.Create))
                     {
                         file.CopyTo(fileStreams);
                     }
-                    productVM.Product.ImageUrl = @"images\products\" + filename + extension;
+                    productVM.Product.ImageUrl = @"\images\products\" + filename + extension;
                 }
                 await _productReposiotry.AddUpdateProduct(productVM.Product);
                 return RedirectToAction("Index");
@@ -97,37 +104,34 @@ namespace BookyWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
+        #region API CALLS
         [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            ServiceResponse<List<GetProductDto>> productResponse = await _productReposiotry.GetAllProducts();
+            var productList = productResponse.Data.Select(c => _mapper.Map<Product>(c));
+            return Json(new { data=productList });
+        }
+        //POST
+        [HttpDelete]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var productResponse = await _productReposiotry.GetSingleProduct(id);
-            var product = _mapper.Map<Product>(productResponse.Data);
+            var serviceResponse = await _productReposiotry.GetSingleProduct(id);
+            var product = _mapper.Map<Product>(serviceResponse.Data);
             if (product == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
-            return View(product);
-        }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeletePost(int? id)
-        {
-            if (id == null)
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
             {
-                return NotFound();
+                System.IO.File.Delete(oldImagePath);
             }
-            var productResponse = await _productReposiotry.GetSingleProduct(id);
-            if (productResponse.Data == null)
-            {
-                return NotFound();
-            }
-            await _productReposiotry.DeleteProduct(id);
-            return RedirectToAction("Index");
+
+            await _productReposiotry.DeleteProduct(product.Id);
+            return Json(new { success = true, message = "Delete Successful" });
         }
+        #endregion
     }
 }

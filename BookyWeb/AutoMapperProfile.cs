@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookyWeb.Data.Dtos.CategoryDtos;
+using BookyWeb.Data.Dtos.CompanyDtos;
 using BookyWeb.Data.Dtos.CoverTypeDtos;
 using BookyWeb.Data.Dtos.ProductDtos;
 using BookyWeb.Models;
@@ -16,6 +17,8 @@ namespace BookyWeb
             CreateMap<CoverType, GetCoverTypeDto>();
             CreateMap<Product, GetProductDto>();
             CreateMap<GetProductDto, Product>();
+            CreateMap<GetCompanyDto, Company>();
+            CreateMap<Company, GetCompanyDto>();
         }
     }
 }

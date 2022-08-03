@@ -25,8 +25,7 @@ namespace BookyWeb.Data.Repositories.ProductRepository
         public async Task<ServiceResponse<List<GetProductDto>>> AddUpdateProduct(Product product)
         {
             var response = new ServiceResponse<List<GetProductDto>>();
-            Product productFromDb = await _dbContext.Products.FirstOrDefaultAsync(c => c.Id == product.Id);
-            if (productFromDb != null)
+            if (product.Id != 0)
             {
                 _dbContext.Products.Update(product);
             }
@@ -64,7 +63,11 @@ namespace BookyWeb.Data.Repositories.ProductRepository
         public async Task<ServiceResponse<List<GetProductDto>>> GetAllProducts()
         {
             var response = new ServiceResponse<List<GetProductDto>>();
-            response.Data = await _dbContext.Products.Select(c => _mapper.Map<GetProductDto>(c)).ToListAsync();
+            response.Data = await _dbContext.Products
+                .Include(c => c.Category)
+                .Include(c => c.CoverType)
+                .Select(c => _mapper.Map<GetProductDto>(c))
+                .ToListAsync();
             return response;
         }
 
@@ -77,7 +80,10 @@ namespace BookyWeb.Data.Repositories.ProductRepository
                 response.Message = "Product Not Found";
                 return response;
             }
-            var product = await _dbContext.Products.FirstOrDefaultAsync(c => c.Id == id);
+            var product = await _dbContext.Products
+                .Include(c => c.CoverType)
+                .Include(c => c.Category)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (product == null)
             {
                 response.Status = false;

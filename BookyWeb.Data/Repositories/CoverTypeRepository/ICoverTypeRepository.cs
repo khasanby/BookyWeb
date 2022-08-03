@@ -13,7 +13,7 @@ namespace BookyWeb.Data.Repositories.CoverTypeRepository
         Task<ServiceResponse<List<GetCoverTypeDto>>> AddCoverType(CoverType CoverType);
         Task<ServiceResponse<List<GetCoverTypeDto>>> GetAllCoverTypes();
         Task<ServiceResponse<GetCoverTypeDto>> GetSingleCoverType(int? id);
-        Task<ServiceResponse<GetCoverTypeDto>> EditCoverType(CoverType CoverType);
         Task<ServiceResponse<List<GetCoverTypeDto>>> DeleteCoverType(int? id);
+        Task<ServiceResponse<GetCoverTypeDto>> EditCoverType(CoverType coverType);
     }
 }

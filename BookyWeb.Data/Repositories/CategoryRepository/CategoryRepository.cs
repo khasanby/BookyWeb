@@ -53,15 +53,6 @@ namespace BookyWeb.Data.Repositories.CategoryRepository
             return response;
         }
 
-        public async Task<ServiceResponse<GetCategoryDto>> EditCategory(Category category)
-        {
-            var response = new ServiceResponse<GetCategoryDto>();
-            _dbContext.Categories.Update(category);
-            await _dbContext.SaveChangesAsync();
-            response.Data = _mapper.Map<GetCategoryDto>(category);
-            return response;
-        }
-
         public async Task<ServiceResponse<List<GetCategoryDto>>> GetAllCategories()
         {
             var response = new ServiceResponse<List<GetCategoryDto>>();
@@ -85,6 +76,19 @@ namespace BookyWeb.Data.Repositories.CategoryRepository
                 response.Message = "Category Not Found";
                 return response;
             }
+            response.Data = _mapper.Map<GetCategoryDto>(category);
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetCategoryDto>> UpdateCategory(Category category)
+        {
+            var response = new ServiceResponse<GetCategoryDto>();
+            var categoryFromDb = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
+            if (categoryFromDb != null)
+            {
+                _dbContext.Categories.Update(category);
+            }
+            await _dbContext.SaveChangesAsync();
             response.Data = _mapper.Map<GetCategoryDto>(category);
             return response;
         }

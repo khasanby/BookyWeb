@@ -46,29 +46,29 @@ namespace BookyWeb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if(id == null || id == 0)
             {
                 return NotFound();
             }
             var categoryResponse = await _categoryRepository.GetSingleCategory(id);
-            var category = _mapper.Map<Category>(categoryResponse.Data);
-            if (category == null)
+            if(categoryResponse.Data == null)
             {
                 return NotFound();
             }
+            Category category = _mapper.Map<Category>(categoryResponse.Data);
             return View(category);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Category editedCategory)
+        public async Task<IActionResult> Edit(Category newCategory)
         {
             if (ModelState.IsValid)
             {
-                await _categoryRepository.EditCategory(editedCategory);
+                await _categoryRepository.UpdateCategory(newCategory);
                 return RedirectToAction("Index");
             }
-            return View(editedCategory);
+            return View(newCategory);
         }
 
         [HttpGet]

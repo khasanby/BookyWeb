@@ -13,7 +13,7 @@ namespace BookyWeb.Data.Repositories.CategoryRepository
         Task<ServiceResponse<List<GetCategoryDto>>> AddCategory(Category newCategory);
         Task<ServiceResponse<List<GetCategoryDto>>> GetAllCategories();
         Task<ServiceResponse<GetCategoryDto>> GetSingleCategory(int? id);
-        Task<ServiceResponse<GetCategoryDto>> EditCategory(Category category);
         Task<ServiceResponse<List<GetCategoryDto>>> DeleteCategory(int? id);
+        Task<ServiceResponse<GetCategoryDto>> UpdateCategory(Category category);
     }
 }

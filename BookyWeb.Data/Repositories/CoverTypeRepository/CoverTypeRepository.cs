@@ -56,9 +56,10 @@ namespace BookyWeb.Data.Repositories.CoverTypeRepository
         public async Task<ServiceResponse<GetCoverTypeDto>> EditCoverType(CoverType coverType)
         {
             var response = new ServiceResponse<GetCoverTypeDto>();
+            var id = coverType.Id;
             _dbContext.CoverTypes.Update(coverType);
             await _dbContext.SaveChangesAsync();
-            response.Data = _mapper.Map<GetCoverTypeDto>(coverType);
+            response.Data =  _mapper.Map<GetCoverTypeDto>(coverType);
             return response;
         }
 
