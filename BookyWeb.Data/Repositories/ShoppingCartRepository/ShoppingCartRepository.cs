@@ -51,10 +51,21 @@ namespace BookyWeb.Data.Repositories.ShoppingCartRepository
             return response;
         }
 
-        public async Task<ServiceResponse<List<ShoppingCart>>> GetAllShoppingCarts()
+        public async Task<ServiceResponse<List<ShoppingCart>>> GetAllShoppingCarts(Claim? claim)
         {
             var response = new ServiceResponse<List<ShoppingCart>>();
-            response.Data = await _dbContext.ShoppingCarts.ToListAsync();
+
+            if (claim == null)
+            {
+                response.Data = await _dbContext.ShoppingCarts.ToListAsync();
+            }
+            else
+            {
+                response.Data = _dbContext.ShoppingCarts.
+                    Include(c => c.Product)
+                    .Where(c => c.ApplicationUserId == claim.Value).ToList();
+            }
+
             return response;
         }
 
@@ -131,6 +142,16 @@ namespace BookyWeb.Data.Repositories.ShoppingCartRepository
             }
             await _dbContext.SaveChangesAsync();
             response.Data = shoppingCart;
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<ShoppingCart>>> GetAllByUserId(string? applicationUserId)
+        {
+            var response = new ServiceResponse<List<ShoppingCart>>();
+            if(applicationUserId != null)
+            {
+                response.Data = await _dbContext.ShoppingCarts.Where(c => c.ApplicationUserId == applicationUserId).ToListAsync();
+            }
             return response;
         }
     }
