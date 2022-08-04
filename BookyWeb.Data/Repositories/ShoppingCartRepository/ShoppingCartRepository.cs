@@ -154,5 +154,19 @@ namespace BookyWeb.Data.Repositories.ShoppingCartRepository
             }
             return response;
         }
+
+        public async Task<ServiceResponse<List<ShoppingCart>>> RemoveRange(List<ShoppingCart> shoppingCarts)
+        {
+             _dbContext.ShoppingCarts.RemoveRange(shoppingCarts);
+            await _dbContext.SaveChangesAsync();
+            var response = new ServiceResponse<List<ShoppingCart>>();
+            response.Data = await _dbContext.ShoppingCarts.ToListAsync();
+            return response;
+        }
+
+        public async Task<List<ShoppingCart>> GetAllShoppingCartsByApplicationUserId(string id)
+        {
+            return await _dbContext.ShoppingCarts.Where(c => c.ApplicationUserId == id).ToListAsync();
+        }
     }
 }

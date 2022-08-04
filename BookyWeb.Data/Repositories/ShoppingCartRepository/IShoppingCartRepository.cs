@@ -12,6 +12,7 @@ namespace BookyWeb.Data.Repositories.ShoppingCartRepository
     {
         Task<ServiceResponse<List<ShoppingCart>>> AddShoppingCart(ShoppingCart shoppingCart);
         Task<ServiceResponse<List<ShoppingCart>>> GetAllShoppingCarts(Claim? claim);
+        Task<List<ShoppingCart>> GetAllShoppingCartsByApplicationUserId(string id);
         Task<ServiceResponse<ShoppingCart>> GetSingleShoppingCart(int? id);
         Task<ServiceResponse<List<ShoppingCart>>> DeleteShoppingCart(int? id);
         Task<ServiceResponse<ShoppingCart>> UpdateShoppingCart(ShoppingCart shoppingCart);
@@ -19,5 +20,6 @@ namespace BookyWeb.Data.Repositories.ShoppingCartRepository
         Task<ServiceResponse<int>> IncrementCount(ShoppingCart shoppingCart, int count);
         Task<ServiceResponse<int>> DecrementCount(ShoppingCart shoppingCart, int count);
         Task<ServiceResponse<List<ShoppingCart>>> GetAllByUserId(string? applicationUserId);
+        Task<ServiceResponse<List<ShoppingCart>>> RemoveRange(List<ShoppingCart> shoppingCarts);
     }
 }

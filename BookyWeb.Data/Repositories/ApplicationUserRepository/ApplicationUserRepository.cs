@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,6 +55,22 @@ namespace BookyWeb.Data.Repositories.ApplicationUserRepository
             return response;
         }
 
+        public async Task<ServiceResponse<List<ApplicationUser>>> GetAllApplicationUsers(Claim? claim)
+        {
+            var response = new ServiceResponse<List<ApplicationUser>>();
+
+            if (claim == null)
+            {
+                response.Data = await _dbContext.ApplicationUsers.ToListAsync();
+            }
+            else
+            {
+                response.Data = await _dbContext.ApplicationUsers.Where(c => c.Id == claim.Value).ToListAsync();
+            }
+
+            return response;
+        }
+
         public async Task<ServiceResponse<ApplicationUser>> GetSingleApplicationUser(int? id)
         {
             var response = new ServiceResponse<ApplicationUser>();
@@ -70,6 +87,13 @@ namespace BookyWeb.Data.Repositories.ApplicationUserRepository
                 response.Message = "ApplicationUser Not Found";
                 return response;
             }
+            return response;
+        }
+
+        public async Task<ServiceResponse<ApplicationUser>> GetSingleApplicationUser(Claim? claim)
+        {
+            var response = new ServiceResponse<ApplicationUser>();
+            response.Data = await _dbContext.ApplicationUsers.FirstOrDefaultAsync(c => c.Id == claim.Value);
             return response;
         }
 
